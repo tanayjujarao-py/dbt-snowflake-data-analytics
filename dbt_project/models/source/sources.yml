@@ -1,0 +1,18 @@
+version: 2
+
+sources:
+  - name: source
+    database: dbt_tutorial_dev
+    schema: source
+    tables:
+      - name: fct_sales
+
+      - name: fct_returns
+
+      - name: dim_dates
+
+      - name: dim_customers
+
+      - name: dim_products
+
+      - name: dim_stores

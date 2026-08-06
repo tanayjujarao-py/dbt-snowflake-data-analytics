@@ -1,0 +1,1 @@
+SELECT * FROM {{source('source','fct_returns')}}
