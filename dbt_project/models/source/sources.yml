@@ -16,3 +16,5 @@ sources:
       - name: dim_products
 
       - name: dim_stores
+
+      - name: items
