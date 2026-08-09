@@ -20,6 +20,9 @@ logs/
 .env
 .env.*
 
+# dbt local/user configuration
+dbt_project/.user.yml
+
 # IDE
 .vscode/
 
