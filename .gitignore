@@ -7,4 +7,22 @@ wheels/
 *.egg-info
 
 # Virtual environments
-.venv
+.venv/
+
+# dbt
+dbt_project/profiles.yml
+dbt_project/target/
+dbt_project/dbt_packages/
+dbt_project/logs/
+logs/
+
+# Environment / secrets
+.env
+.env.*
+
+# IDE
+.vscode/
+
+# OS
+.DS_Store
+Thumbs.db
