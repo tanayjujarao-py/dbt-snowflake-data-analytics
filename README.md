@@ -1,97 +1,156 @@
-dbt + Snowflake Retail Analytics — ELT Pipeline Project
+# 🏗️ dbt + Snowflake Retail Analytics — ELT Pipeline Project
 
-A hands-on data engineering and analytics project demonstrating a production-style ELT pipeline using dbt (data build tool) and Snowflake. Built to showcase modern data stack skills through a real transformation workflow on retail data.
+![dbt](https://img.shields.io/badge/dbt-FF694B?style=for-the-badge&logo=dbt&logoColor=white)
+![Snowflake](https://img.shields.io/badge/Snowflake-29B5E8?style=for-the-badge&logo=snowflake&logoColor=white)
+![Python](https://img.shields.io/badge/Python-3776AB?style=for-the-badge&logo=python&logoColor=white)
+![SQL](https://img.shields.io/badge/SQL-4479A1?style=for-the-badge&logo=postgresql&logoColor=white)
 
-What This Project Does
+A hands-on data engineering and analytics project demonstrating a **production-style ELT pipeline** using dbt (data build tool) and Snowflake. Built to showcase modern data stack skills through a real transformation workflow on retail data — including sales, products, customers, and returns.
 
-Processes raw retail data — sales, products, customers, and returns — through a structured Bronze → Silver → Gold layered architecture, transforming messy source data into clean, business-ready analytical models.
+---
 
-Key outcomes:
+## 📌 Key Outcomes
 
-Clean, tested, analytics-ready data models in Snowflake
-Historical change tracking via SCD Type 2 snapshots
-Reusable macros eliminating repetitive SQL
-Data quality enforced through automated dbt tests
-Tech Stack
-Tool	Purpose
-dbt Core	SQL-based data transformation & modeling
-Snowflake	Cloud data warehouse
-Jinja	Dynamic SQL templating & macros
-Python	Environment & dependency management
-Architecture
-Raw Source Data (Snowflake)
-        ↓
-   [Bronze Layer]  → Ingests raw data as-is, single source of truth
-        ↓
-   [Silver Layer]  → Cleans, joins, and enriches bronze data
-        ↓
-   [Gold Layer]    → Aggregated, de-duplicated, BI-ready models
-Features
+- ✅ Clean, tested, analytics-ready data models in Snowflake
+- ✅ Historical change tracking via **SCD Type 2 snapshots**
+- ✅ Reusable **Jinja macros** eliminating repetitive SQL
+- ✅ Data quality enforced through **automated dbt tests**
+- ✅ Layered **Bronze → Silver → Gold** architecture
 
-Layered Data Modeling
-Three-tier Bronze/Silver/Gold architecture for scalable, maintainable transformations. Each layer has a single, well-defined responsibility.
+---
 
-Data Quality Testing
+## 🛠️ Tech Stack
 
-Built-in dbt tests: unique, not_null, accepted_values
-Custom singular tests: SQL queries that must return zero rows
-Custom generic tests: reusable test definitions applied across models
+| Tool | Purpose |
+|------|---------|
+| **dbt Core** | SQL-based data transformation & modeling |
+| **Snowflake** | Cloud data warehouse |
+| **Jinja** | Dynamic SQL templating & macros |
+| **Python** | Environment & dependency management |
 
-Slowly Changing Dimensions (SCD Type 2)
-Snapshot-based historical tracking on the items table using timestamp strategy — captures every change over time, not just the current state.
+---
 
-Reusable Jinja Macros
+## 🏛️ Architecture
 
-multiply.sql — column multiplication macro
-generate_schema.sql — dynamic schema generation per environment (dev/prod)
+```
+┌─────────────────────────────────────┐
+│        Raw Source Data              │
+│  (Snowflake — sales, products,      │
+│   customers, returns)               │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│          🥉 Bronze Layer            │
+│  Ingests raw data as-is             │
+│  Single source of truth             │
+│  Example: bronze_sales.sql          │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│          🥈 Silver Layer            │
+│  Cleans, joins & enriches data      │
+│  Handles nulls, type casting,       │
+│  deduplication                      │
+│  Example: silver_salesinfo.sql      │
+└──────────────┬──────────────────────┘
+               │
+               ▼
+┌─────────────────────────────────────┐
+│          🥇 Gold Layer              │
+│  Aggregated, BI-ready models        │
+│  Final output for dashboards        │
+│  Example: source_gold_items.sql     │
+└─────────────────────────────────────┘
+```
 
-Seed Data
-Static lookup tables loaded via dbt seed to support model joins without hardcoding values.
+---
 
-Centralized Source Management
-All sources defined in sources.yml for clean data lineage and a single point of change.
+## ✨ Features
 
-Repository Structure
-dbt_project/
-├── models/
-│   ├── bronze/          # Raw ingestion layer
-│   ├── silver/          # Cleaning & enrichment layer
-│   └── gold/            # Business-ready aggregation layer
-├── macros/              # Reusable Jinja macros
-├── seeds/               # Static/lookup CSV data
-├── snapshots/           # SCD Type 2 historical tracking
-├── tests/
-│   ├── singular/        # One-off SQL tests
-│   └── generic/         # Reusable test definitions
-└── analyses/            # Exploratory SQL & Jinja demos
-How to Run
-bash
-# Clone the repo
+### 🗂️ Layered Data Modeling
+Three-tier **Bronze / Silver / Gold** architecture for scalable, maintainable transformations. Each layer has a single, well-defined responsibility — making the pipeline easy to debug, extend, and understand.
+
+### 🧪 Data Quality Testing
+Automated tests run at every layer to ensure data integrity:
+- **Built-in dbt tests** — `unique`, `not_null`, `accepted_values`
+- **Singular tests** — custom SQL queries that must return zero rows to pass (e.g., `non_negative_test.sql`)
+- **Generic tests** — reusable test definitions applied across multiple models (e.g., `generic_non_negative.sql`)
+
+### 📸 Slowly Changing Dimensions (SCD Type 2)
+Uses **dbt snapshots** to track historical changes in the items table using a timestamp-based strategy — capturing every version of a record over time, not just the latest state.
+
+### ⚙️ Reusable Jinja Macros
+Custom macros to keep SQL DRY (Don't Repeat Yourself):
+- `multiply.sql` — multiplies two columns dynamically
+- `generate_schema.sql` — generates schema names based on target environment (dev/prod)
+
+### 🌱 Seed Data
+Static lookup tables loaded via `dbt seed` — supporting model joins without hardcoding values directly in SQL.
+
+### 🔗 Centralized Source Management
+All raw data sources defined in a single `sources.yml` file for clean **data lineage**, easier maintenance, and a single point of change.
+
+---
+
+## 📁 Repository Structure
+
+```
+dbt-snowflake-data-analytics/
+│
+├── dbt_project/
+│   ├── models/
+│   │   ├── bronze/              # 🥉 Raw ingestion layer
+│   │   │   └── bronze_sales.sql
+│   │   ├── silver/              # 🥈 Cleaning & enrichment layer
+│   │   │   └── silver_salesinfo.sql
+│   │   ├── gold/                # 🥇 Business-ready aggregation layer
+│   │   │   └── source_gold_items.sql
+│   │   └── source/
+│   │       └── sources.yml      # Centralized source definitions
+│   │
+│   ├── macros/                  # ⚙️ Reusable Jinja macros
+│   │   ├── multiply.sql
+│   │   └── generate_schema.sql
+│   │
+│   ├── seeds/                   # 🌱 Static lookup data
+│   │   └── lookup.csv
+│   │
+│   ├── snapshots/               # 📸 SCD Type 2 tracking
+│   │   └── gold_items.yml
+│   │
+│   ├── tests/                   # 🧪 Data quality tests
+│   │   ├── non_negative_test.sql
+│   │   └── generic/
+│   │       └── generic_non_negative.sql
+│   │
+│   ├── analyses/                # 🔍 Exploratory SQL & Jinja demos
+│   └── dbt_project.yml
+│
+├── requirements.txt
+└── README.md
+```
+
+---
+
+## 🚀 How to Run
+
+### 1. Clone the Repository
+```bash
 git clone https://github.com/tanayjujarao-py/dbt-snowflake-data-analytics.git
 cd dbt-snowflake-data-analytics
+```
 
-# Install dependencies
+### 2. Install Dependencies
+```bash
 pip install -r requirements.txt
+```
 
-# Configure your Snowflake profile in ~/.dbt/profiles.yml
-# then navigate into the project
-cd dbt_project
+### 3. Configure Snowflake Profile
+Create or update `~/.dbt/profiles.yml`:
 
-# Run everything in one command
-dbt build
-
-Or run steps individually:
-
-bash
-dbt seed        # Load lookup data
-dbt run         # Execute all models
-dbt test        # Run data quality tests
-dbt snapshot    # Track historical changes
-Snowflake Profile Setup
-
-Add the following to ~/.dbt/profiles.yml:
-
-yaml
+```yaml
 dbt_project:
   target: dev
   outputs:
@@ -106,8 +165,47 @@ dbt_project:
       schema: <your_schema>
       threads: 1
       client_session_keep_alive: False
-Prerequisites
-Python 3.8+
-dbt-core
-dbt-snowflake
-Snowflake account with read/write permissions
+```
+
+### 4. Run the Project
+
+**Run everything in one command:**
+```bash
+cd dbt_project
+dbt build
+```
+
+**Or run steps individually:**
+```bash
+dbt seed        # 🌱 Load static lookup data into Snowflake
+dbt run         # ⚙️  Execute all transformation models
+dbt test        # 🧪 Run all data quality tests
+dbt snapshot    # 📸 Track historical changes via SCD Type 2
+```
+
+---
+
+## 📋 Prerequisites
+
+- Python 3.8+
+- `dbt-core`
+- `dbt-snowflake`
+- A Snowflake account with read/write permissions on your target database
+
+---
+
+## 💡 What I Learned
+
+- Designing a **layered ELT architecture** (Bronze/Silver/Gold) for maintainable data pipelines
+- Writing **modular, reusable SQL** using Jinja templating and dbt macros
+- Implementing **SCD Type 2** with dbt snapshots for historical data tracking
+- Enforcing **data quality** at scale using dbt's built-in and custom test framework
+- Managing **multi-environment deployments** with dynamic schema generation
+
+---
+
+## 🔗 Connect
+
+[![Portfolio](https://img.shields.io/badge/Portfolio-000000?style=for-the-badge&logo=github&logoColor=white)](https://tanayjujarao-py.github.io/)
+[![LinkedIn](https://img.shields.io/badge/LinkedIn-0A66C2?style=for-the-badge&logo=linkedin&logoColor=white)](https://linkedin.com/in/tanay-jujarao-8499a8255)
+[![GitHub](https://img.shields.io/badge/GitHub-181717?style=for-the-badge&logo=github&logoColor=white)](https://github.com/tanayjujarao-py)
